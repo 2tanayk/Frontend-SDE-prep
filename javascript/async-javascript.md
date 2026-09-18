@@ -781,3 +781,278 @@ Event Loop
 - `Promise.all()` and `allSettled()` preserve input order.
 - `Promise.race()` does not cancel losing operations.
 - `setTimeout(0)` does not mean immediate execution.
+
+
+# Fetch API & AbortController
+
+## Fetch API
+
+`fetch()` is the browser's built-in Promise-based API for making HTTP requests.
+
+```js
+const response = await fetch("/api/users");
+const users = await response.json();
+```
+
+Important data flow:
+
+```
+fetch()
+  ↓
+Promise<Response>
+  ↓
+Response object
+  ↓
+response.json()
+  ↓
+actual data
+```
+
+### Request configuration
+
+```js
+const response = await fetch("/api/users", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
+    },
+    body: JSON.stringify({
+        name: "Tanay"
+    })
+});
+```
+
+Common options:
+- `method`
+- `headers`
+- `body`
+- `credentials`
+- `signal`
+
+### Response object
+
+Common properties:
+
+```js
+response.status
+response.ok
+response.headers
+```
+
+`response.ok` is true for HTTP status codes 200–299.
+
+### Critical error-handling distinction
+
+```
+Network failure / abort
+    ↓
+fetch Promise rejects
+
+HTTP 400 / 401 / 403 / 404 / 500
+    ↓
+fetch Promise normally fulfills
+    ↓
+response.ok === false
+    ↓
+application handles the HTTP error explicitly
+```
+
+Therefore:
+
+```js
+const response = await fetch("/api/users");
+
+if (!response.ok) {
+    throw new Error(`HTTP error: ${response.status}`);
+}
+
+const data = await response.json();
+```
+
+### Response body methods
+
+Common methods:
+
+```js
+response.json()
+response.text()
+response.blob()
+response.arrayBuffer()
+```
+
+The response body is generally consumed once. If it needs to be consumed twice, use `response.clone()`.
+
+### POST example
+
+```js
+const response = await fetch("/api/users", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+        name: "Tanay",
+        email: "tanay@example.com"
+    })
+});
+
+if (!response.ok) {
+    throw new Error(`Request failed: ${response.status}`);
+}
+
+const createdUser = await response.json();
+```
+
+---
+
+## AbortController
+
+`AbortController` provides a standard cancellation mechanism for APIs that support an `AbortSignal`. `fetch` supports it.
+
+```js
+const controller = new AbortController();
+
+fetch("/api/users", {
+    signal: controller.signal
+});
+
+// Cancel the request
+controller.abort();
+```
+
+For fetch, aborting causes the Promise to reject, typically with an `AbortError`.
+
+### Why use it?
+
+Suppose a user rapidly changes a search:
+
+```
+"jav"        → Request 1
+"java"       → Request 2
+"javascript" → Request 3
+```
+
+If Request 1 is now obsolete, cancel it:
+
+```js
+const controller = new AbortController();
+
+fetch("/api/search?q=java", {
+    signal: controller.signal
+});
+
+controller.abort();
+```
+
+This is useful for cancelling obsolete requests and controlling request lifecycles.
+
+### AbortController + timeout
+
+Manual timeout:
+
+```js
+const controller = new AbortController();
+
+const timeoutId = setTimeout(() => {
+    controller.abort();
+}, 5000);
+
+try {
+    const response = await fetch("/api/users", {
+        signal: controller.signal
+    });
+
+    if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+    }
+
+    const data = await response.json();
+} catch (error) {
+    if (error.name === "AbortError") {
+        console.log("Request was cancelled");
+    } else {
+        console.error("Request failed", error);
+    }
+} finally {
+    clearTimeout(timeoutId);
+}
+```
+
+Modern browsers also support:
+
+```js
+const response = await fetch("/api/users", {
+    signal: AbortSignal.timeout(5000)
+});
+```
+
+### Reusable cancellation pattern
+
+```js
+async function getUsers(signal) {
+    const response = await fetch("/api/users", { signal });
+
+    if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+    }
+
+    return response.json();
+}
+
+const controller = new AbortController();
+
+try {
+    const users = await getUsers(controller.signal);
+} catch (error) {
+    if (error.name === "AbortError") {
+        console.log("Request cancelled");
+    } else {
+        console.error(error);
+    }
+}
+```
+
+The caller controls the request lifecycle while the function simply accepts a signal.
+
+### SDE-2 mental model
+
+```
+fetch(url, options)
+    ↓
+Promise<Response>
+    ↓
+Response metadata
+    → status
+    → ok
+    → headers
+    ↓
+response.json()/text()/blob()
+    ↓
+actual body
+
+AbortController
+    ↓
+AbortSignal
+    ↓
+fetch({ signal })
+    ↓
+controller.abort()
+    ↓
+fetch rejects with AbortError
+```
+
+### Interview definition
+
+> Fetch is a Promise-based Web API for making HTTP requests. It resolves to a Response object when a response is received; HTTP error statuses do not inherently reject the Promise, so applications typically check response.ok or response.status. AbortController provides cancellation by passing its AbortSignal to fetch and calling abort() when the request should be cancelled.
+
+### High-value points
+
+- `fetch()` returns a `Promise<Response>`, not parsed JSON.
+- `response.json()` is also asynchronous and returns a Promise.
+- HTTP 4xx/5xx responses normally do not reject fetch by themselves.
+- Network failures and aborts reject the fetch Promise.
+- Response bodies are generally consumed once.
+- `AbortController` creates a signal that can be passed to fetch.
+- `controller.abort()` cancels an in-flight fetch.
+- `AbortSignal.timeout()` provides a convenient timeout signal.
