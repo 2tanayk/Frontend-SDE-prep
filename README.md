@@ -12,7 +12,7 @@ JavaScript and React interview revision at practical SDE-2 level.
 - [JavaScript Modules — ESM, Globals & CommonJS](javascript/modules-esm-commonjs.md) — import/export, named vs default, module scope, `window`, classic scripts, React usage, CommonJS vs ESM
 - [npm, package.json, package-lock.json & Version Ranges](javascript/npm-package-management.md) — npm dependencies, `node_modules`, lockfiles, exact versions, `~` vs `^`, bundling and `dist`
 - [Arrays & Objects](javascript/arrays-objects.md) — array methods, object methods, destructuring, spread/rest, optional chaining and nullish coalescing
-- [Promises](javascript/promises.md) — Promise states, chaining, `.then()`, `.catch()`, `.finally()`, `all`, `race`, `allSettled`, `any`
+- [Async JavaScript — Event Loop, Callbacks & Promises](javascript/async-javascript.md) — call stack, task/microtask queues, callbacks, Promise chaining and Promise methods
 
 ## React
 
