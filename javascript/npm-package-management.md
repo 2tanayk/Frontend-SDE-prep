@@ -1,3 +1,101 @@
+## Third-party libraries in a modular vanilla JS app
+
+You do **not** need React or a framework to use third-party libraries modularly.
+
+### CDN + ES modules
+
+A CDN can provide a library as an ES module:
+
+```html
+<script type="module" src="./app.js"></script>
+```
+
+`app.js`:
+
+```js
+import dayjs from "https://cdn.jsdelivr.net/npm/dayjs/+esm";
+import { greet } from "./utils.js";
+
+const currentDate = dayjs().format("DD-MM-YYYY");
+document.getElementById("date").textContent = `${greet("Tanay")} — ${currentDate}`;
+```
+
+`utils.js`:
+
+```js
+export function greet(name) {
+    return `Hello ${name}`;
+}
+```
+
+The browser follows the module graph:
+
+```text
+index.html
+    ↓
+app.js
+    ├──→ utils.js
+    └──→ Day.js CDN
+```
+
+Day.js is therefore an explicit module dependency; it does not need to be placed on `window`.
+
+### Global/classic script approach
+
+You can also load a third-party library as a classic script:
+
+```html
+<script src="https://some-library.com/library.js"></script>
+<script src="./app.js"></script>
+```
+
+If it exposes a global, `app.js` can use `SomeLibrary.doSomething()`.
+
+This is useful for tiny pages, simple widgets, or libraries intentionally designed to expose a global. Globals are not inherently bad; use them when global access is intentionally part of the design. Modules are preferred when you want isolated scope and explicit dependencies.
+
+## npm + node_modules + bundling
+
+Instead of a CDN, a larger vanilla JS application can install a library locally:
+
+```bash
+npm install dayjs
+```
+
+Then:
+
+```js
+import dayjs from "dayjs";
+```
+
+`node_modules/dayjs` contains the installed package. The browser does not normally load packages directly from `node_modules`. A bundler such as Vite can resolve that package, process the module graph, and produce browser-ready output.
+
+### npm vs bundler
+
+- **npm** → gets and manages dependencies.
+- **Bundler** → takes your source + dependencies and prepares optimized browser assets.
+
+Bundling is not what makes the code modular. `import`/`export` already provide the modularity.
+
+## What is `dist`?
+
+`dist` means **distribution** and is a conventional name for the build output:
+
+```text
+src/ + node_modules/
+        ↓
+     Bundler
+        ↓
+dist/
+├── index.html
+└── assets/
+    ├── app-abc123.js
+    └── styles-def456.css
+```
+
+`dist` is the complete built/deployable frontend. It is not necessarily one giant JavaScript file; code splitting can produce multiple JS chunks.
+
+---
+
 # npm, package.json, package-lock.json & Version Ranges
 
 ## 1. package.json
