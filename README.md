@@ -1,6 +1,6 @@
 # Frontend-SDE-prep
 
-JavaScript and React interview revision at practical SDE-2 level.
+JavaScript, TypeScript and React interview revision at practical SDE-2 level.
 
 ## JavaScript
 
@@ -14,6 +14,11 @@ JavaScript and React interview revision at practical SDE-2 level.
 - [Arrays & Objects](javascript/arrays-objects.md) — array methods, object methods, destructuring, spread/rest, optional chaining and nullish coalescing
 - [Async JavaScript — Event Loop, Callbacks & Promises](javascript/async-javascript.md) — call stack, task/microtask queues, callbacks, Promise chaining and Promise methods
 - [Browser Storage — localStorage, sessionStorage & Cookies](javascript/storage.md) — persistence, tab/session scope, cookies, HTTP requests and security attributes
+
+## TypeScript
+
+### Fundamentals
+- [TypeScript Fundamentals](typescript/typescript-fundamentals.md) — types, inference, type/interface, functions, unions/intersections, narrowing, generics, any/unknown/never, assertions, utility types and API typing
 
 ## React
 
