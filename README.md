@@ -26,5 +26,4 @@ JavaScript, TypeScript and React interview revision at practical SDE-2 level.
 - [React Core Concepts](react/core-concepts.md) — JSX, Virtual DOM, reconciliation, keys, components, props, state, re-renders and controlled vs uncontrolled components
 
 ### Hooks
-
-*Coming soon*
+- [React Hooks](react/hooks.md) — useState, useEffect, useRef, useMemo, useCallback, useContext, useReducer, Context + Reducer, custom hooks and Rules of Hooks
