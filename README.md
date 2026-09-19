@@ -13,6 +13,7 @@ JavaScript and React interview revision at practical SDE-2 level.
 - [npm, package.json, package-lock.json & Version Ranges](javascript/npm-package-management.md) — npm dependencies, `node_modules`, lockfiles, exact versions, `~` vs `^`, bundling and `dist`
 - [Arrays & Objects](javascript/arrays-objects.md) — array methods, object methods, destructuring, spread/rest, optional chaining and nullish coalescing
 - [Async JavaScript — Event Loop, Callbacks & Promises](javascript/async-javascript.md) — call stack, task/microtask queues, callbacks, Promise chaining and Promise methods
+- [Browser Storage — localStorage, sessionStorage & Cookies](javascript/storage.md) — persistence, tab/session scope, cookies, HTTP requests and security attributes
 
 ## React
 
