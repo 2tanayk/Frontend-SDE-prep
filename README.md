@@ -23,5 +23,8 @@ JavaScript, TypeScript and React interview revision at practical SDE-2 level.
 ## React
 
 ### Fundamentals
+- [React Core Concepts](react/core-concepts.md) — JSX, Virtual DOM, reconciliation, keys, components, props, state, re-renders and controlled vs uncontrolled components
+
+### Hooks
 
 *Coming soon*
