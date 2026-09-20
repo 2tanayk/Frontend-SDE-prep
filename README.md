@@ -30,3 +30,6 @@ JavaScript, TypeScript and React interview revision at practical SDE-2 level.
 
 ### State Management
 - [React State Management](react/state-management.md) — prop drilling, Context, Context + useReducer, provider value identity, re-render considerations, Redux store/actions/reducers/dispatch/selectors and tradeoffs
+
+### Performance
+- [React Performance](react/performance.md) — unnecessary re-renders, React.memo, useMemo vs useCallback, lazy loading, code splitting, keys and performance best practices
