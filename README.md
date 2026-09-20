@@ -27,3 +27,6 @@ JavaScript, TypeScript and React interview revision at practical SDE-2 level.
 
 ### Hooks
 - [React Hooks](react/hooks.md) — useState, useEffect, useRef, useMemo, useCallback, useContext, useReducer, Context + Reducer, custom hooks and Rules of Hooks
+
+### State Management
+- [React State Management](react/state-management.md) — prop drilling, Context, Context + useReducer, provider value identity, re-render considerations, Redux store/actions/reducers/dispatch/selectors and tradeoffs
