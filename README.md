@@ -24,6 +24,7 @@ JavaScript, TypeScript and React interview revision at practical SDE-2 level.
 
 ### Fundamentals
 - [React Core Concepts](react/core-concepts.md) — JSX, Virtual DOM, reconciliation, keys, components, props, state, re-renders and controlled vs uncontrolled components
+- [React Router](react/routing.md) — BrowserRouter vs HashRouter, navigation, URL params, location, protected routes, authentication/authorization, nested routes, Outlet and index routes
 
 ### Hooks
 - [React Hooks](react/hooks.md) — useState, useEffect, useRef, useMemo, useCallback, useContext, useReducer, Context + Reducer, custom hooks and Rules of Hooks
